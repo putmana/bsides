@@ -34,7 +34,7 @@ def getPosts(boardname):
         DESC           
     """ % (boardname)
 
-    return queryhandler.run_query(query)
+    return query.run_query(query)
 
 def getUserPosts(username):
     with UseDatabase(sql_config.dbconfig) as cursor:

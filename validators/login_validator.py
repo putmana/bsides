@@ -1,18 +1,27 @@
 from flask import Request
 
-def validate(request: Request):
-    # Validate the email address
-    email = request.form['email']
-    assert(email != "", "Email cannot be blank")
+import bcrypt
 
-    # Validate the password
+from controllers import user_controller
+
+INVALID_LOGIN_MSG = "Incorrect email or password."
+
+def validate(request: Request):
+
+    email = request.form['email']
     password = request.form['password']
-    assert(password != "", "Password cannot be blank")
+
+    # Attempt to fetch a user from the database with the provided email
+    user = user_controller.fetch_credentials(email)
+
+    # Check that a user with the entered email address exists
+    assert(user != None, INVALID_LOGIN_MSG)
+
+    # Check that the entered password matches the returned user
+    assert(bcrypt.checkpw(password, user['password']), INVALID_LOGIN_MSG)
 
     return {
-        'email': email,
-        'password': password
+        'id': user['id'],
+        'email': user['email'],
+        'username': user['username']
     }
-
-
-    

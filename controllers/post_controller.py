@@ -11,7 +11,7 @@ import os
 
 # GET
 # ---- DISPLAY PAGE WITH ALL POSTS ON A BOARD ----
-def fetch_all(board_name: str) -> str or Response:
+def fetch_by_board(board_name: str) -> str or Response:
     try:
         # Make sure the board exists
         board = board_controller.fetch_one(board_name)
@@ -51,14 +51,10 @@ def fetch_all(board_name: str) -> str or Response:
     except Exception as err:
         print(f"ERROR: {err}")
         return redirect('/pnf')
-        
-
-def fetch_one(post_id):
-    pass
 
 # GET
 # ---- DISPLAY NEW POST FORM ----
-def make(board_name: str) -> redirect or Response:
+def make(board_name: str, alerts=[]) -> redirect or Response:
     # Make sure the board exists
     board = board_controller.fetch_one(board_name)
     if board == None: return redirect('/pnf')
@@ -67,7 +63,7 @@ def make(board_name: str) -> redirect or Response:
         'post.html',
         board=board['name'],
         title=f"Post to /{board['name']}",
-        alerts=[],
+        alerts=alerts,
         session=session
     )
 
@@ -99,20 +95,4 @@ def store(board_name: str, request: Request):
         return redirect(f"/b/{board['name']}")
     
     except Exception as err:
-        print(err)
-        return error(board['name'], err)
-
-# GET
-# ---- DISPLAY NEW POST FORM WITH ERROR MESSAGE ----
-def error(board_name, error):
-    # Make sure the board exists
-    board = board_controller.fetch_one(board_name)
-    if board == None: return redirect('/pnf')
-
-    return render_template(
-        'post.html',
-        board=board['name'],
-        title=f"Post to /{board['name']}",
-        alerts=[error],
-        session=session
-    )
+        return make(board_name, [err])
