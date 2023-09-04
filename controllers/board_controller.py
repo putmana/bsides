@@ -1,6 +1,6 @@
 from queryhandler import run_query
 
-def fetch_one(board_name):
+def fetch_by_name(board_name):
     query = """
         SELECT
         b.id,
@@ -10,10 +10,10 @@ def fetch_one(board_name):
         boards as b
 
         WHERE
-        b.name = '%s'
-    """ % board_name
+        b.name = %s
+    """
     
-    results = run_query(query)
+    results = run_query(query, [board_name])
 
     # Return None if the board does not exist
     if len(results) == 0:

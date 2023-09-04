@@ -5,7 +5,7 @@ from validators import login_validator
 
 # GET
 # ---- DISPLAY PAGE WITH LOGIN FORM ----
-def show(alerts: []):
+def show(alerts=[]):
     return render_template(
         'login.html',
         title="Log into B-Sides",

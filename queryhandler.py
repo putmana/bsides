@@ -1,8 +1,6 @@
 # SSH Tunneling Configuration
 from sshtunnel import SSHTunnelForwarder
 
-# SQL Configuration
-from ssh_config import sshconfig
 from DBcm import UseDatabase
 
 # Enviromnemt Variables
@@ -11,10 +9,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-def run_query(query):
+def run_query(query, args):
     
     # Prepare a function to open the database and run the query
-    def execute_query(query):
+    def execute_query(query, args):
         with UseDatabase({
             'user': os.getenv('SQL_USER'),
             'password': os.getenv('SQL_PASSWORD'),
@@ -24,7 +22,8 @@ def run_query(query):
             'use_pure': True  
         }) as cursor:
             # Run the query
-            cursor.execute(query)
+            print(args)
+            cursor.execute(query, args)
 
             return cursor.fetchall()
 
@@ -43,8 +42,8 @@ def run_query(query):
             'remote_bind_address': (os.getenv('SSH_REMOTE_BIND_ADDRESS'), int(os.getenv('SSH_REMOTE_BIND_PORT'))),
             'local_bind_address': (os.getenv('SSH_LOCAL_BIND_ADDRESS'), int(os.getenv('SSH_LOCAL_BIND_PORT')))
         }):
-            return execute_query(query)
+            return execute_query(query, args)
     else:
         print("SSH TUNNELING DISABLED")
 
-        return execute_query(query)
+        return execute_query(query, args)

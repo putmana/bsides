@@ -39,7 +39,7 @@ def b_get() -> str:
 ##############
 @app.route('/b/<string:board_name>', methods=['GET'])
 def b_board_show(board_name):
-    return post_controller.fetch_all(board_name)
+    return post_controller.fetch_by_board(board_name)
 
 
 
@@ -51,7 +51,7 @@ def b_board_show(board_name):
 def b_board_make(board_name):
     return post_controller.make(board_name)
 
-@app.route('/b/<string:boardname>/post', methods=['POST'])
+@app.route('/b/<string:board_name>/post', methods=['POST'])
 @authenticated
 def b_board_store(board_name) -> str:
     return post_controller.store(board_name, request)
@@ -62,8 +62,8 @@ def b_board_store(board_name) -> str:
 # USER PAGE #
 #############
 @app.route('/u/<string:username>', methods=['GET'])
-def u_user_get():
-    return redirect('/b') # Not quite ready yet
+def u_user_get(username):
+    return post_controller.fetch_by_user(username)
 
 
 

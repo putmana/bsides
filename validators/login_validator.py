@@ -15,10 +15,12 @@ def validate(request: Request):
     user = user_controller.fetch_credentials(email)
 
     # Check that a user with the entered email address exists
-    assert(user != None, INVALID_LOGIN_MSG)
+    assert user != None, INVALID_LOGIN_MSG
 
     # Check that the entered password matches the returned user
-    assert(bcrypt.checkpw(password, user['password']), INVALID_LOGIN_MSG)
+
+    print(user['password'])
+    assert bcrypt.checkpw(password.encode('utf8'), user['password'].encode('utf8')), INVALID_LOGIN_MSG
 
     return {
         'id': user['id'],

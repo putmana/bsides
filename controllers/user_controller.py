@@ -1,5 +1,31 @@
 from queryhandler import run_query
 
+def fetch_by_name(user_name):
+    query = """
+        SELECT
+        u.id,
+        u.username
+
+        FROM
+        users as u
+
+        WHERE
+        u.username = %s
+    """
+
+    results = run_query(query, [user_name])
+
+    # Return None if the user does not exist
+    if len(results) == 0:
+        return False
+    
+    return {
+        'id': results[0][0],
+        'username': results[0][1]
+    }
+
+
+
 def fetch_credentials(email):
     # Fetch the user by email
     query = """
@@ -10,10 +36,10 @@ def fetch_credentials(email):
         users as u
 
         WHERE
-        email = '%s'
-    """ % email
+        email = %s
+    """
 
-    results = run_query(query)
+    results = run_query(query, [email])
 
     if (len(results) == 0): return None
 
@@ -34,12 +60,13 @@ def email_is_unique(email):
         users as u
 
         WHERE
-        email = '%s'
-    """ % (email)
+        email = %s
+    """
 
-    results = run_query(query)
+    results = run_query(query, [email])
 
-    if len(results != 0): return False
+    if len(results) == 0: return True
+    return False
 
 def username_is_unique(username):
     # Check for a user that uses the username provided
@@ -51,13 +78,13 @@ def username_is_unique(username):
         users as u
 
         WHERE
-        email = '%s'
-    """ % (username)
+        email = %s
+    """
 
-    results = run_query(query)
+    results = run_query(query, [username])
 
-    if len(results != 0): return False
-
+    if len(results) == 0: return True
+    return False
 
 
 

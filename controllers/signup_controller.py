@@ -27,10 +27,10 @@ def signup(request: Request):
             INSERT INTO
             users (id, email, username, password)
 
-            VALUES {%s, %s, %s, %s, %s}
-        """ % (validated["id"], validated["email"], validated["username"], validated["password"])
+            VALUES (%s, %s, %s, %s)
+        """
 
-        run_query(query)
+        run_query(query, [validated["id"], validated["email"], validated["username"], validated["password"]])
         
         return redirect("/login")
 
