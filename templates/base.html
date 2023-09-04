@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
+        <!-- Indigo Style CSS -->
+        <link rel="stylesheet" href="../../static/css/style.css">
+
+        <link rel="stylesheet" href="https://use.typekit.net/kfe0goh.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+
+        <link rel="shortcut icon" href="../static/icons/favicon.png">
+
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand">&lt/B&gt</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <i class="bi bi-list" style="color: white;"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/b">
+                                <i class="nlk-icon bi bi-x-diamond-fill"></i>
+                                <span class="nlk-text">Boards</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link disabled" href="#" disabled>
+                                <i class="nlk-icon bi bi-bell-fill"></i>
+                                <span class="nlk-text">Subscriptions</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    {% if session['user_id'] %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileBTN" role="button" data-bs-toggle="dropdown"><i class="ddn-icon bi bi-person-fill"></i><span>{{ session ['username']}}</span></a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                            <li>
+                                <a class="dropdown-item" href="/u/{{ session['username'] }}">
+                                    <i class="ddn-icon bi bi-person-fill"></i>
+                                    <span class="ddn-text">Profile</span>
+                                </a>
+                            </li><li>
+                                <a class="dropdown-item" href="/logout">
+                                    <i class="ddn-icon bi bi-door-closed-fill"></i>
+                                    <span class="ddn-text">Log Out</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="profileBTN" role="button" data-bs-toggle="dropdown"><i class="ddn-icon bi bi-person-fill"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-lg-end">
+                            <li>
+                                <a class="dropdown-item" href="/signup">
+                                    <i class="ddn-icon bi bi-person-fill"></i>
+                                    <span class="ddn-text">Sign Up</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/login">
+                                    <i class="ddn-icon bi bi-pencil-fill"></i>
+                                    <span class="ddn-text">Log In</span>
+                                </a>
+                            </li>         
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+       
+
+
+        <div class="container-lg content">
+            {% for alert in alerts %}
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {{ alert }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+    
+            {% endfor %}
+
+            {% block body %}
+
+            {% endblock %}
+        </div>
+        
+        <!--Bootstrap JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+    </body>
+</html>

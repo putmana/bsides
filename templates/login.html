@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="row justify-content-center mb-3">
+    <div class="col-auto">
+        <h3>Log In</h3>
+    </div>
+</div>
+
+
+<form method="POST" action="/login">
+    <div class="row gy-1 justify-content-center">
+        <div class="col-auto logbox">
+            <div class="mb-3">
+                <label for="email" class="form-label">Username</label>
+                <input class="form-control" type="email" name="email" id="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input class="form-control" type="password" name="password" id="password" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value="Log In" style="width: 100%;">
+            <span class="bp-votecount">No email? <a href="/signup">Sign up!</a></span>
+        </div>
+    </div>
+
+</form>
+
+
+{% endblock %}

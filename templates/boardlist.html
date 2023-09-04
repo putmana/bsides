@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h4>Boards</h4>
+
+<div class="row gx-2 gy-2">
+    <div class="col-md-3">
+        <div class="card boardlist">
+            <div class="card-header">
+                Interests
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <a class="boardlink" href="/b/cars">/cars</a>
+                    </li>
+                    <li>
+                        <a class="boardlink" href="/b/tech">/tech</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card boardlist">
+            <div class="card-header">
+                Hobbies
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <a class="boardlink" href="/b/art">/art</a>
+                    </li>
+                    <li>
+                        <a class="boardlink" href="/b/music">/music</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card boardlist">
+            <div class="card-header">
+                Culture
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <a class="boardlink" href="/b/politics">/politics</a>
+                    </li>
+                    <li>
+                        <a class="boardlink" href="/b/news">/news</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card boardlist">
+            <div class="card-header">
+                Misc
+            </div>
+            <div class="card-body">
+                <ul>
+                    <li>
+                        <a class="boardlink" href="/b/random">/random</a>
+                    </li>
+                    <li>
+                        <a class="boardlink" href="/b/outofcontext">/outofcontext</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
