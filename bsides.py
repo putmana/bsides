@@ -11,7 +11,8 @@ load_dotenv()
 
 
 app = Flask(__name__)
-app.secret_key = "B-SIDES-KEY"
+
+
 
 ###############
 # ERROR PAGES #
@@ -105,7 +106,9 @@ def signup_get():
 def signup_signup():
     return signup_controller.signup(request)
 
-app.run(
-    debug=bool(os.getenv('APP_DEBUG')), 
-    port=int(os.getenv('APP_PORT'))
-)
+if __name__ == "__main__":
+    app.secret_key = os.urandom(12)
+    app.run(
+        debug=bool(os.getenv('APP_DEBUG')), 
+        port=int(os.getenv('APP_PORT'))
+    )
