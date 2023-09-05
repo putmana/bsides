@@ -29,7 +29,7 @@ def run_query(query, args):
 
 
     # Tunnel query through SSH if enabled
-    if os.getenv("SSH_TUNNELING"):
+    if bool(os.getenv("SSH_TUNNELING")):
         print("SSH TUNNELING ENABLED")
 
         with SSHTunnelForwarder(**{
