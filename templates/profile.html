@@ -12,22 +12,22 @@
 
 
     {% for post in posts %}
-    <div class="col-md-5 bp" id="{{ post[3] }}">
+    <div class="col-md-5 bp" id="{{ post["id"] }}">
         <div class="row bp-header justify-content-between">
             <div class="col-auto">
-                <div class="bp-username">Posted on /{{ post[0] }}</div>
+                <div class="bp-username">Posted on <a href="/b/{{ post["board_name"] }}">{{ post["board_name"] }}</a></div>
             </div>
             <div class="col-auto">
-                <div class="bp-time">{{ post[1] }}</div>
+                <div class="bp-time">{{ post["datetime"] }}</div>
             </div>
         </div>
     
         <div class="row bp-content">
             <div class="col-sm-12">
-                <img class="bp-img" src="/static/uploads/{{ post[4] }}">
+                <img class="bp-img" src="/static/uploads/{{ post["image_path"] }}">
             </div>
             <div class="col-12">
-                <p class="bp-text">{{ post[2] }}</p>
+                <p class="bp-text">{{ post["caption"] }}</p>
             </div>
         </div>
 

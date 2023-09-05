@@ -8,6 +8,8 @@ from controllers import board_controller, user_controller
 from validators import post_validator
 from exceptions import ValidationError
 
+from utils import format_time
+
 import os
 
 # GET
@@ -40,10 +42,21 @@ def fetch_by_board(board_name: str) -> str or Response:
 
     results = run_query(query, [board['name']])
 
+    def post_map(result):
+        return {
+            "username": result[0],
+            "datetime": format_time(int(result[1])),
+            "caption": result[2],
+            "id": result[3],
+            "image_path": result[4]
+        }
+
+    posts = map(post_map, results)
+
     return render_template(
         'board.html', 
         name='/%s' % (board['name']), 
-        posts=results, 
+        posts=posts, 
         title=f"/{board['name']}",
         alerts=[],
         session=session
@@ -80,13 +93,25 @@ def fetch_by_user(username):
 
     results = run_query(query, [user['username']])
 
+    def post_map(result):
+        return {
+            "board_name": result[0],
+            "datetime": format_time(int(result[1])),
+            "caption": result[2],
+            "id": result[3],
+            "image_path": result[4]
+        }
+
+    posts = map(post_map, results)
+
     return render_template(
         'profile.html', 
         name=user['username'], 
-        posts=results, 
+        posts=posts, 
         title=f"@{user['username']}", 
         alerts=[], 
-        session=session)
+        session=session
+    )
     
 
 
