@@ -4,6 +4,11 @@ from flask.globals import session
 from authenticated import authenticated, loggedout
 from controllers import post_controller, login_controller, signup_controller
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 app = Flask(__name__)
 app.secret_key = "B-SIDES-KEY"
@@ -100,4 +105,7 @@ def signup_get():
 def signup_signup():
     return signup_controller.signup(request)
 
-app.run(debug=True)
+app.run(
+    debug=bool(os.getenv('APP_DEBUG')), 
+    port=int(os.getenv('APP_PORT'))
+)
