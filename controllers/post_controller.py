@@ -12,13 +12,15 @@ from utils import format_time
 
 import os
 
+
 # GET
 # ---- DISPLAY PAGE WITH ALL POSTS ON A BOARD ----
 def fetch_by_board(board_name: str) -> str or Response:
     # Make sure the board exists
     board = board_controller.fetch_by_name(board_name)
     print(board)
-    if board is None: abort(404)
+    if board is None:
+        abort(404)
 
     query = """
         SELECT
@@ -54,14 +56,13 @@ def fetch_by_board(board_name: str) -> str or Response:
     posts = map(post_map, results)
 
     return render_template(
-        'board.html', 
-        name='/%s' % (board['name']), 
-        posts=posts, 
+        'board.html',
+        name='/%s' % (board['name']),
+        posts=posts,
         title=f"/{board['name']}",
         alerts=[],
         session=session
     )
-
 
 
 # GET
@@ -69,7 +70,8 @@ def fetch_by_board(board_name: str) -> str or Response:
 def fetch_by_user(username):
     # Make sure the board exists
     user = user_controller.fetch_by_name(username)
-    if user == None: return redirect('/pnf')
+    if user == None:
+        return redirect('/pnf')
 
     query = """
         SELECT
@@ -105,15 +107,13 @@ def fetch_by_user(username):
     posts = map(post_map, results)
 
     return render_template(
-        'profile.html', 
-        name=user['username'], 
-        posts=posts, 
-        title=f"@{user['username']}", 
-        alerts=[], 
+        'profile.html',
+        name=user['username'],
+        posts=posts,
+        title=f"@{user['username']}",
+        alerts=[],
         session=session
     )
-    
-
 
 
 # GET
@@ -121,7 +121,7 @@ def fetch_by_user(username):
 def make(board_name: str, alerts=[]) -> redirect or Response:
     # Make sure the board exists
     board = board_controller.fetch_by_name(board_name)
-    if board == None: 
+    if board == None:
         return redirect('/pnf')
 
     return render_template(
@@ -133,21 +133,21 @@ def make(board_name: str, alerts=[]) -> redirect or Response:
     )
 
 
-
 # POST
 # ---- PROCESS NEW POST FORM ----
 def store(board_name: str, request: Request):
     try:
         # Make sure the board exists
         board = board_controller.fetch_by_name(board_name)
-        if board is None: 
+        if board is None:
             return redirect('/pnf')
-        
+
         # Validate the request
         validated = post_validator.validate(request)
 
         # Store the image to the disk
-        validated['file'].save(os.path.join(os.getenv("UPLOAD_FOLDER"), validated['file_name']))
+        validated['file'].save(os.path.join(
+            os.getenv("UPLOAD_FOLDER"), validated['file_name']))
 
         # Generate and run the database query
         query = """
@@ -157,10 +157,11 @@ def store(board_name: str, request: Request):
             values (%s, %s, %s, %s, %s, %s)
         """
 
-        run_query(query, [validated['id'], board['id'], session['user_id'], validated['datetime'], validated['caption'], validated['file_name']])
+        run_query(query, [validated['id'], board['id'], session['user_id'],
+                  validated['datetime'], validated['caption'], validated['file_name']])
 
         # Redirect the user back to the board page
         return redirect(f"/b/{board['name']}")
-    
+
     except ValidationError as err:
         return make(board_name, [err])

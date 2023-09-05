@@ -1,5 +1,6 @@
 from queryhandler import run_query
 
+
 def fetch_by_name(user_name):
     query = """
         SELECT
@@ -18,12 +19,11 @@ def fetch_by_name(user_name):
     # Return None if the user does not exist
     if len(results) == 0:
         return None
-    
+
     return {
         'id': results[0][0],
         'username': results[0][1]
     }
-
 
 
 def fetch_credentials(email):
@@ -41,7 +41,8 @@ def fetch_credentials(email):
 
     results = run_query(query, [email])
 
-    if (len(results) == 0): return None
+    if (len(results) == 0):
+        return None
 
     return {
         'id': results[0][0],
@@ -49,7 +50,8 @@ def fetch_credentials(email):
         'email': results[0][2],
         'password': results[0][3]
     }
-    
+
+
 def email_is_unique(email):
     # Check for a user that uses the email provided
     query = """
@@ -65,8 +67,10 @@ def email_is_unique(email):
 
     results = run_query(query, [email])
 
-    if len(results) == 0: return True
+    if len(results) == 0:
+        return True
     return False
+
 
 def username_is_unique(username):
     # Check for a user that uses the username provided
@@ -83,9 +87,6 @@ def username_is_unique(username):
 
     results = run_query(query, [username])
 
-    if len(results) == 0: return True
+    if len(results) == 0:
+        return True
     return False
-
-
-
-

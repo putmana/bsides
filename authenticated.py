@@ -1,6 +1,7 @@
 from flask import session, redirect
 from functools import wraps
 
+
 def authenticated(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -8,6 +9,7 @@ def authenticated(func):
             return redirect("/login")
         return func(*args, **kwargs)
     return wrapper
+
 
 def loggedout(func):
     @wraps(func)

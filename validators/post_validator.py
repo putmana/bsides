@@ -10,6 +10,7 @@ MSG_CAPTION_BLANK = "Caption cannot be blank."
 MSG_FILE_MISSING = "File is missing."
 MSG_INVALID_EXTENSION = "Invalid file extension"
 
+
 def validate(request: Request):
     # Generate an ID for the post
     post_id = str(uuid.uuid4())
@@ -28,7 +29,7 @@ def validate(request: Request):
     extension = get_extension(file.filename)
     if (extension not in ALLOWED_EXTENSIONS):
         raise ValidationError(MSG_INVALID_EXTENSION)
-    
+
     # Standardize the file name
     file_name = f"image_{post_id}.{extension}"
 
@@ -40,10 +41,10 @@ def validate(request: Request):
         "caption": caption,
         "datetime": datetime,
         "file": file,
-        "file_name": file_name 
+        "file_name": file_name
     }
+
 
 def get_extension(filename):
     # Return the extension when given a file name
     return filename.rsplit('.', 1)[1].lower()
-

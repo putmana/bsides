@@ -6,6 +6,8 @@ from exceptions import ValidationError
 
 # GET
 # ---- DISPLAY PAGE WITH LOGIN FORM ----
+
+
 def show(alerts=[]):
     return render_template(
         'login.html',
@@ -16,6 +18,8 @@ def show(alerts=[]):
 
 # POST
 # ---- ATTEMPT TO LOG IN THE USER ----
+
+
 def login(request: Request):
     try:
         # Validate the request
@@ -27,12 +31,14 @@ def login(request: Request):
         session["email"] = validated["email"]
 
         return redirect("/b")
-    
+
     except ValidationError as err:
         return show([err])
-    
+
 # GET
 # ---- LOG OUT THE USER ----
+
+
 def logout():
     session.pop('user_id')
     session.pop('username')

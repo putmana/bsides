@@ -16,6 +16,7 @@ def show(alerts=[]):
         session=session
     )
 
+
 # POST
 # ---- ATTEMPT TO SIGN UP THE USER ----
 def signup(request: Request):
@@ -31,16 +32,10 @@ def signup(request: Request):
             VALUES (%s, %s, %s, %s)
         """
 
-        run_query(query, [validated["id"], validated["email"], validated["username"], validated["password"]])
-        
+        run_query(query, [validated["id"], validated["email"],
+                  validated["username"], validated["password"]])
+
         return redirect("/login")
 
     except ValidationError as err:
         return show([err])
-    
-
-
-
-
-
-

@@ -30,11 +30,10 @@ MSG_PASSWORD_TOO_SHORT = f"Password must be at least {PASSWORD_MIN_LENGTH} chara
 MSG_PASSWORD_TOO_LONG = f"Maximum password length is {PASSWORD_MAX_LENGTH} characters"
 MSG_PASSWORD_TOO_WEAK = "Password must contain at least one letter and one number"
 
+
 def validate(request: Request):
     # Generate an ID for the user
     user_id = str(uuid.uuid4())
-
-
 
     ############################
     # EMAIL ADDRESS VALIDATION #
@@ -49,8 +48,6 @@ def validate(request: Request):
     if not user_controller.email_is_unique(email):
         raise ValidationError(MSG_EMAIL_IN_USE)
 
-
-
     #######################
     # USERNAME VALIDATION #
     #######################
@@ -63,7 +60,7 @@ def validate(request: Request):
     # Check that the username is not too short
     if len(username) < USERNAME_MIN_LENGTH:
         raise ValidationError(MSG_USERNAME_TOO_SHORT)
-    
+
     # Check that the username is not too long
     if len(username) > USERNAME_MAX_LENGTH:
         raise ValidationError(MSG_USERNAME_TOO_LONG)
@@ -71,19 +68,17 @@ def validate(request: Request):
     # Check that the username does not only contain underscores
     if len(username.replace("_", "")) == 0:
         raise ValidationError(MSG_USERNAME_ONLY_UNDERSCORES)
-    
+
     # Check that the username is not already in use
     if not user_controller.username_is_unique(username):
         raise ValidationError(MSG_USERNAME_IN_USE)
-
-
 
     #######################
     # PASSWORD VALIDATION #
     #######################
     password = request.form['password']
     confirm_password = request.form['confirm_password']
-    
+
     # Check that the password and confirm password fields match
     if not password == confirm_password:
         raise ValidationError(MSG_PASSWORDS_DONT_MATCH)
@@ -95,13 +90,14 @@ def validate(request: Request):
     # Check that the password is not too long
     if password > PASSWORD_MAX_LENGTH:
         raise ValidationError(MSG_PASSWORD_TOO_LONG)
-    
+
     # Check that password meets complexity criteria
     if re.fullmatch(PASSWORD_REGEX, password) is None:
         raise ValidationError(MSG_PASSWORD_TOO_WEAK)
 
     # Encrypt the password
-    hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
+    hashed_password = bcrypt.hashpw(password.encode(
+        'utf8'), bcrypt.gensalt()).decode('utf8')
 
     return {
         "id": user_id,
@@ -109,13 +105,3 @@ def validate(request: Request):
         "username": username,
         "password": hashed_password
     }
-
-
-
-    
-
-
-
-
-
-

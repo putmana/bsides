@@ -5,8 +5,9 @@ from DBcm import UseDatabase
 
 from utils import env
 
+
 def run_query(query, args):
-    
+
     # Prepare a function to open the database and run the query
     def execute_query(query, args):
         with UseDatabase({
@@ -15,13 +16,12 @@ def run_query(query, args):
             'host': env('SQL_HOST'),
             'port': env('SQL_PORT'),
             'database': env('SQL_DATABASE'),
-            'use_pure': True  
+            'use_pure': True
         }) as cursor:
             # Run the query
             cursor.execute(query, args)
 
             return cursor.fetchall()
-
 
     # Tunnel query through SSH if enabled
     if env("SSH_TUNNELING"):
@@ -29,7 +29,7 @@ def run_query(query, args):
 
         with SSHTunnelForwarder(**{
             'ssh_address_or_host': (
-                env("SSH_HOST"), 
+                env("SSH_HOST"),
                 env("SSH_PORT")
             ),
             'ssh_username': env('SSH_USER'),
