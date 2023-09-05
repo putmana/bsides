@@ -386,13 +386,13 @@ a:hover {
 }
 
 .full-logo {
-    padding-top: 96px;
-    padding-bottom: 96px;
-    width: 400px;
+    padding-top: 64px;
+    padding-bottom: 64px;
+    width: 200px;
 
-    @media (max-width: 500px) {
-        padding-top: 64px;
-        padding-bottom: 64px;
-        width: 200px;
+    @media (min-width: 500px) {
+        padding-top: 96px;
+        padding-bottom: 96px;
+        width: 400px;
     }
 }
