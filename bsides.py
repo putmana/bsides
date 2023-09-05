@@ -9,8 +9,7 @@ from utils import env
 import os
 
 app = Flask(__name__)
-app.secret_key = os.urandom(12)
-
+app.secret_key = os.urandom(12).hex()
 
 ###############
 # ERROR PAGES #
