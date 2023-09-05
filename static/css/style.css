@@ -384,3 +384,15 @@ a:hover {
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
+
+.full-logo {
+    padding-top: 96px;
+    padding-bottom: 96px;
+    max-width: 400px;
+
+    @media (max-width: 500px) {
+        padding-top: 64px;
+        padding-bottom: 64px;
+        max-width: 200px;
+    }
+}
