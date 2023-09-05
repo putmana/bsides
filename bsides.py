@@ -6,10 +6,9 @@ from controllers import post_controller, login_controller, signup_controller
 
 from utils import env
 
-import os
-
 app = Flask(__name__)
-app.secret_key = os.urandom(12).hex()
+app.secret_key = env("APP_SECRET_KEY")
+
 
 ###############
 # ERROR PAGES #
