@@ -18,7 +18,6 @@ def run_query(query, args):
             'use_pure': True  
         }) as cursor:
             # Run the query
-            print(args)
             cursor.execute(query, args)
 
             return cursor.fetchall()

@@ -86,8 +86,6 @@ def validate(request: Request):
     # Encrypt the password
     hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')
 
-    print(f"HASHED PASSWORD: {hashed_password}")
-
     return {
         "id": user_id,
         "email": email,

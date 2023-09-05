@@ -9,6 +9,7 @@ from utils import env
 import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(12)
 
 
 ###############
@@ -108,7 +109,6 @@ def signup_signup():
 ###############################
 
 if __name__ == "__main__":
-    app.secret_key = os.urandom(12)
     app.run(
         debug=env("APP_DEBUG"),
         port=env("APP_PORT")

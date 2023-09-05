@@ -18,8 +18,6 @@ def validate(request: Request):
     assert user != None, INVALID_LOGIN_MSG
 
     # Check that the entered password matches the returned user
-
-    print(user['password'])
     assert bcrypt.checkpw(password.encode('utf8'), user['password'].encode('utf8')), INVALID_LOGIN_MSG
 
     return {

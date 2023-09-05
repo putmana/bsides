@@ -49,7 +49,6 @@ def fetch_by_board(board_name: str) -> str or Response:
         )
 
     except Exception as err:
-        print(f"ERROR: {err}")
         return redirect('/pnf')
 
 
@@ -93,7 +92,6 @@ def fetch_by_user(username):
             session=session)
     
     except Exception as err:
-        print(f"ERROR: {err}")
         return redirect('/pnf')
 
 
