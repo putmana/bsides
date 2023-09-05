@@ -5,6 +5,8 @@ import re
 import uuid
 import bcrypt
 
+from exceptions import ValidationError
+
 EMAIL_REGEX = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b"
 PASSWORD_REGEX = r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{2,}$"
 
@@ -32,16 +34,21 @@ def validate(request: Request):
     # Generate an ID for the user
     user_id = str(uuid.uuid4())
 
+
+
     ############################
     # EMAIL ADDRESS VALIDATION #
     ############################
     email = request.form['email'].lower()
 
     # Check that the email address is valid
-    assert re.fullmatch(EMAIL_REGEX, email) != None, MSG_EMAIL_INVALID
+    if re.match(EMAIL_REGEX, email) is None:
+        raise ValidationError(MSG_EMAIL_INVALID)
 
     # Check that the email is not already in use
-    assert user_controller.email_is_unique(email), MSG_EMAIL_IN_USE
+    if not user_controller.email_is_unique(email):
+        raise ValidationError(MSG_EMAIL_IN_USE)
+
 
 
     #######################
@@ -50,19 +57,25 @@ def validate(request: Request):
     username = request.form['username']
 
     # Check that the username only contains alphanumeric characters and underscores
-    assert username.replace("_", "").isalnum, MSG_USERNAME_NOT_ALPHANUM
+    if not username.replace("_", "").isalnum:
+        raise ValidationError(MSG_USERNAME_NOT_ALPHANUM)
 
     # Check that the username is not too short
-    assert len(username) >= USERNAME_MIN_LENGTH, MSG_USERNAME_TOO_SHORT
+    if len(username) < USERNAME_MIN_LENGTH:
+        raise ValidationError(MSG_USERNAME_TOO_SHORT)
     
     # Check that the username is not too long
-    assert len(username) <= USERNAME_MAX_LENGTH, MSG_USERNAME_TOO_LONG
+    if len(username) > USERNAME_MAX_LENGTH:
+        raise ValidationError(MSG_USERNAME_TOO_LONG)
 
     # Check that the username does not only contain underscores
-    assert len(username.replace("_", "")) != 0, MSG_USERNAME_ONLY_UNDERSCORES
+    if len(username.replace("_", "")) == 0:
+        raise ValidationError(MSG_USERNAME_ONLY_UNDERSCORES)
     
     # Check that the username is not already in use
-    assert user_controller.username_is_unique(username), MSG_USERNAME_IN_USE
+    if not user_controller.username_is_unique(username):
+        raise ValidationError(MSG_USERNAME_IN_USE)
+
 
 
     #######################
@@ -72,16 +85,20 @@ def validate(request: Request):
     confirm_password = request.form['confirm_password']
     
     # Check that the password and confirm password fields match
-    assert password == confirm_password, MSG_PASSWORDS_DONT_MATCH
+    if not password == confirm_password:
+        raise ValidationError(MSG_PASSWORDS_DONT_MATCH)
 
     # Check that the password is not too short
-    assert len(password) >= PASSWORD_MIN_LENGTH, MSG_PASSWORD_TOO_SHORT
+    if password < PASSWORD_MIN_LENGTH:
+        raise ValidationError(MSG_PASSWORD_TOO_SHORT)
 
     # Check that the password is not too long
-    assert len(password) <= PASSWORD_MAX_LENGTH, MSG_PASSWORD_TOO_LONG
-
+    if password > PASSWORD_MAX_LENGTH:
+        raise ValidationError(MSG_PASSWORD_TOO_LONG)
+    
     # Check that password meets complexity criteria
-    assert re.fullmatch(PASSWORD_REGEX, password) != None, MSG_PASSWORD_TOO_WEAK
+    if re.fullmatch(PASSWORD_REGEX, password) is None:
+        raise ValidationError(MSG_PASSWORD_TOO_WEAK)
 
     # Encrypt the password
     hashed_password = bcrypt.hashpw(password.encode('utf8'), bcrypt.gensalt()).decode('utf8')

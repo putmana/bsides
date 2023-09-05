@@ -363,6 +363,12 @@ a:hover {
 
 .pnf-text {
     display: inline-block;
+    font-size: 16pt;
+    color: var(--lightgrey)
+}
+
+.err-text {
+    display: inline-block;
     font-size: 12pt;
     color: var(--lightgrey)
 }

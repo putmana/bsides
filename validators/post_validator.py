@@ -2,7 +2,13 @@ from flask import Request
 import uuid
 import time
 
+from exceptions import ValidationError
+
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
+MSG_CAPTION_BLANK = "Caption cannot be blank."
+MSG_FILE_MISSING = "File is missing."
+MSG_INVALID_EXTENSION = "Invalid file extension"
 
 def validate(request: Request):
     # Generate an ID for the post
@@ -10,15 +16,18 @@ def validate(request: Request):
 
     # Make sure the caption is not blank
     caption = request.form['caption']
-    assert caption != "", "Caption must not be blank!"
+    if (caption.isspace() or caption == ""):
+        raise ValidationError(MSG_CAPTION_BLANK)
 
     # Make sure the image exists
     file = request.files['imageupload']
-    assert file != None, "No file provided"
+    if (file is None):
+        raise ValidationError(MSG_FILE_MISSING)
 
     # Make sure the file has a valid extension
     extension = get_extension(file.filename)
-    assert extension in ALLOWED_EXTENSIONS, f"Invalid file extension: {extension}"
+    if (extension not in ALLOWED_EXTENSIONS):
+        raise ValidationError(MSG_INVALID_EXTENSION)
     
     # Standardize the file name
     file_name = f"image_{post_id}.{extension}"

@@ -17,7 +17,7 @@ def fetch_by_name(user_name):
 
     # Return None if the user does not exist
     if len(results) == 0:
-        return False
+        return None
     
     return {
         'id': results[0][0],

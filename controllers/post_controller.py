@@ -1,4 +1,4 @@
-from flask import render_template, Request, redirect, Response
+from flask import render_template, Request, redirect, Response, abort
 from flask.globals import session
 
 from queryhandler import run_query
@@ -6,93 +6,88 @@ from queryhandler import run_query
 from controllers import board_controller, user_controller
 
 from validators import post_validator
+from exceptions import ValidationError
 
 import os
 
 # GET
 # ---- DISPLAY PAGE WITH ALL POSTS ON A BOARD ----
 def fetch_by_board(board_name: str) -> str or Response:
-    try:
-        # Make sure the board exists
-        board = board_controller.fetch_by_name(board_name)
-        if board == None: return redirect('/pnf')
+    # Make sure the board exists
+    board = board_controller.fetch_by_name(board_name)
+    print(board)
+    if board is None: abort(404)
 
-        query = """
-            SELECT
-            u.username, bp.datetime, bp.caption, bp.id, bp.imagepath
+    query = """
+        SELECT
+        u.username, bp.datetime, bp.caption, bp.id, bp.imagepath
 
-            FROM boardposts AS bp
+        FROM boardposts AS bp
 
-            JOIN users AS u
-            ON bp.user_id = u.id
+        JOIN users AS u
+        ON bp.user_id = u.id
 
-            JOIN boards AS b
-            ON bp.board_id = b.id
+        JOIN boards AS b
+        ON bp.board_id = b.id
 
-            WHERE
-            b.name = %s
+        WHERE
+        b.name = %s
 
-            ORDER BY
-            bp.datetime
-            DESC
-        """
+        ORDER BY
+        bp.datetime
+        DESC
+    """
 
-        results = run_query(query, [board['name']])
+    results = run_query(query, [board['name']])
 
-        return render_template(
-            'board.html', 
-            name='/%s' % (board['name']), 
-            posts=results, 
-            title=f"/{board['name']}",
-            alerts=[],
-            session=session
-        )
-
-    except Exception as err:
-        return redirect('/pnf')
+    return render_template(
+        'board.html', 
+        name='/%s' % (board['name']), 
+        posts=results, 
+        title=f"/{board['name']}",
+        alerts=[],
+        session=session
+    )
 
 
 
 # GET
 # ---- DISPLAY PAGE WITH ALL POSTS BY A USER ----
 def fetch_by_user(username):
-    try:
-        # Make sure the board exists
-        user = user_controller.fetch_by_name(username)
-        if user == None: return redirect('/pnf')
+    # Make sure the board exists
+    user = user_controller.fetch_by_name(username)
+    if user == None: return redirect('/pnf')
 
-        query = """
-            SELECT
-            b.name, bp.datetime, bp.caption, bp.id, bp.imagepath
+    query = """
+        SELECT
+        b.name, bp.datetime, bp.caption, bp.id, bp.imagepath
 
-            FROM boardposts AS bp
+        FROM boardposts AS bp
 
-            JOIN users AS u
-            ON bp.user_id = u.id
+        JOIN users AS u
+        ON bp.user_id = u.id
 
-            JOIN boards AS b
-            ON bp.board_id = b.id
+        JOIN boards AS b
+        ON bp.board_id = b.id
 
-            WHERE
-            u.username = %s
+        WHERE
+        u.username = %s
 
-            ORDER BY
-            bp.datetime
-            DESC    
-        """
+        ORDER BY
+        bp.datetime
+        DESC    
+    """
 
-        results = run_query(query, [user['username']])
+    results = run_query(query, [user['username']])
 
-        return render_template(
-            'profile.html', 
-            name=user['username'], 
-            posts=results, 
-            title=f"@{user['username']}", 
-            alerts=[], 
-            session=session)
+    return render_template(
+        'profile.html', 
+        name=user['username'], 
+        posts=results, 
+        title=f"@{user['username']}", 
+        alerts=[], 
+        session=session)
     
-    except Exception as err:
-        return redirect('/pnf')
 
 
 
@@ -101,7 +96,8 @@ def fetch_by_user(username):
 def make(board_name: str, alerts=[]) -> redirect or Response:
     # Make sure the board exists
     board = board_controller.fetch_by_name(board_name)
-    if board == None: return redirect('/pnf')
+    if board == None: 
+        return redirect('/pnf')
 
     return render_template(
         'post.html',
@@ -119,8 +115,9 @@ def store(board_name: str, request: Request):
     try:
         # Make sure the board exists
         board = board_controller.fetch_by_name(board_name)
-        assert board, "Board does not exist"
-
+        if board is None: 
+            return redirect('/pnf')
+        
         # Validate the request
         validated = post_validator.validate(request)
 
@@ -140,5 +137,5 @@ def store(board_name: str, request: Request):
         # Redirect the user back to the board page
         return redirect(f"/b/{board['name']}")
     
-    except Exception as err:
+    except ValidationError as err:
         return make(board_name, [err])

@@ -17,7 +17,7 @@ def fetch_by_name(board_name):
 
     # Return None if the board does not exist
     if len(results) == 0:
-        return False
+        return None
     
     return {
         'id': results[0][0],

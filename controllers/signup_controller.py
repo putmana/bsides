@@ -3,6 +3,7 @@ from flask.globals import session
 
 from queryhandler import run_query
 from validators import signup_validator
+from exceptions import ValidationError
 
 
 # GET
@@ -34,7 +35,7 @@ def signup(request: Request):
         
         return redirect("/login")
 
-    except AssertionError as err:
+    except ValidationError as err:
         return show([err])
     
 

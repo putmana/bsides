@@ -10,16 +10,56 @@ app = Flask(__name__)
 app.secret_key = env("APP_SECRET_KEY")
 
 
-###############
-# ERROR PAGES #
-###############
+##################
+# ERROR HANDLING #
+##################
+@app.errorhandler(401)
+def error401(e) -> str:
+    return render_template(
+        'error.html', 
+        title="401", 
+        code="401",
+        text="Nope.",
+        alerts=[], 
+        session=session
+    )
+
+@app.errorhandler(403)
+def error403(e) -> str:
+    return render_template(
+        'error.html', 
+        title="403", 
+        code="403",
+        text="Definitely not.",
+        alerts=[], 
+        session=session
+    )
+
 @app.errorhandler(404)
 def error404(e) -> str:
-    return redirect('/pnf')
+    return render_template(
+        'error.html', 
+        title="404", 
+        code="404",
+        text="Can't find it.",
+        alerts=[], 
+        session=session
+    )
 
-@app.route('/pnf', methods=['GET'])
-def pnf() -> str:
-    return render_template('pagenotfound.html', title="404", alerts=[], session=session)
+@app.errorhandler(Exception) # Internal server errors
+def error500(e) -> str:
+    alerts = []
+    if env("APP_DEBUG"): alerts = [e]
+
+    return render_template(
+        'error.html',
+        title="500",
+        code="500",
+        text="Whoops.",
+        alerts=alerts,
+        session=session
+    )
+
 
 
 
@@ -102,10 +142,11 @@ def signup_get():
 def signup_signup():
     return signup_controller.signup(request)
 
+
+
 ###############################
 ### +++ RUN APPLICATION +++ ###
 ###############################
-
 if __name__ == "__main__":
     app.run(
         debug=env("APP_DEBUG"),

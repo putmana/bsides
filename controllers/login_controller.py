@@ -2,6 +2,7 @@ from flask import render_template, Request, redirect
 from flask.globals import session
 
 from validators import login_validator
+from exceptions import ValidationError
 
 # GET
 # ---- DISPLAY PAGE WITH LOGIN FORM ----
@@ -27,7 +28,7 @@ def login(request: Request):
 
         return redirect("/b")
     
-    except AssertionError as err:
+    except ValidationError as err:
         return show([err])
     
 # GET
