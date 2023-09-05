@@ -4,14 +4,11 @@ from flask.globals import session
 from authenticated import authenticated, loggedout
 from controllers import post_controller, login_controller, signup_controller
 
+from utils import env
+
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
 
 app = Flask(__name__)
-
 
 
 ###############
@@ -106,9 +103,13 @@ def signup_get():
 def signup_signup():
     return signup_controller.signup(request)
 
+###############################
+### +++ RUN APPLICATION +++ ###
+###############################
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(
-        debug=bool(os.getenv('APP_DEBUG')), 
-        port=int(os.getenv('APP_PORT'))
+        debug=env("APP_DEBUG"),
+        port=env("APP_PORT")
     )

@@ -3,22 +3,18 @@ from sshtunnel import SSHTunnelForwarder
 
 from DBcm import UseDatabase
 
-# Enviromnemt Variables
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
+from utils import env
 
 def run_query(query, args):
     
     # Prepare a function to open the database and run the query
     def execute_query(query, args):
         with UseDatabase({
-            'user': os.getenv('SQL_USER'),
-            'password': os.getenv('SQL_PASSWORD'),
-            'host': os.getenv('SQL_HOST'),
-            'port': int(os.getenv('SQL_PORT')),
-            'database': os.getenv('SQL_DATABASE'),
+            'user': env('SQL_USER'),
+            'password': env('SQL_PASSWORD'),
+            'host': env('SQL_HOST'),
+            'port': env('SQL_PORT'),
+            'database': env('SQL_DATABASE'),
             'use_pure': True  
         }) as cursor:
             # Run the query
@@ -29,18 +25,18 @@ def run_query(query, args):
 
 
     # Tunnel query through SSH if enabled
-    if bool(os.getenv("SSH_TUNNELING")):
+    if env("SSH_TUNNELING"):
         print("SSH TUNNELING ENABLED")
 
         with SSHTunnelForwarder(**{
             'ssh_address_or_host': (
-                os.getenv("SSH_HOST"), 
-                int(os.getenv("SSH_PORT"))
+                env("SSH_HOST"), 
+                env("SSH_PORT")
             ),
-            'ssh_username': os.getenv('SSH_USER'),
-            'ssh_pkey': os.getenv('SSH_PRIVATE_KEY_PATH'),
-            'remote_bind_address': (os.getenv('SSH_REMOTE_BIND_ADDRESS'), int(os.getenv('SSH_REMOTE_BIND_PORT'))),
-            'local_bind_address': (os.getenv('SSH_LOCAL_BIND_ADDRESS'), int(os.getenv('SSH_LOCAL_BIND_PORT')))
+            'ssh_username': env('SSH_USER'),
+            'ssh_pkey': env('SSH_PRIVATE_KEY_PATH'),
+            'remote_bind_address': (env('SSH_REMOTE_BIND_ADDRESS'), env('SSH_REMOTE_BIND_PORT')),
+            'local_bind_address': (env('SSH_LOCAL_BIND_ADDRESS'), env('SSH_LOCAL_BIND_PORT'))
         }):
             return execute_query(query, args)
     else:
